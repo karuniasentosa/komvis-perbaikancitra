@@ -18,6 +18,7 @@ type
     btnContrast: TButton;
     btnBrightness: TButton;
     btnSave: TButton;
+    btnGrayscale: TButton;
     Image1: TImage;
     op: TOpenPictureDialog;
     sp: TSavePictureDialog;
@@ -27,12 +28,16 @@ type
     tbContrastP: TTrackBar;
     procedure btnBrightnessClick(Sender: TObject);
     procedure btnContrastClick(Sender: TObject);
+    procedure btnGrayscaleClick(Sender: TObject);
     procedure btnOpenClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnThresholdClick(Sender: TObject);
+    function clampByte(v: integer): byte;
+    function contrastValue(v: byte; g, p: integer): byte;
   private
     lebar, tinggi: integer;
-    grayValue: array[0..1000, 0..1000] of byte;
+    // grayValue: array[0..1000, 0..1000] of byte;
+    bitmapR, bitmapG, bitmapB: array[0..1000, 0..1000] of byte;
   public
 
   end;
@@ -57,12 +62,9 @@ begin
     tinggi := Image1.height;
     for y := 0 to tinggi -  1 do
       for x := 0 to lebar - 1 do begin
-        r := GetRValue(image1.Canvas.Pixels[x,y]);
-        g := GetGValue(image1.Canvas.Pixels[x,y]);
-        b := GetBValue(image1.Canvas.Pixels[x,y]);
-        avg := (r + g + b) div 3;
-        grayValue[x, y] := avg;
-        image1.Canvas.Pixels[x, y] := RGB(avg, avg, avg);
+        bitmapR[x, y] := GetRValue(image1.Canvas.Pixels[x,y]);
+        bitmapG[x, y] := GetGValue(image1.Canvas.Pixels[x,y]);
+        bitmapB[x, y] := GetBValue(image1.Canvas.Pixels[x,y]);
       end;
   end;
 end;
@@ -71,17 +73,19 @@ procedure TForm1.btnBrightnessClick(Sender: TObject);
 var
   y, x: integer;
   brightValue: integer;
-  grayResult : integer;
+  resultR, resultG, resultB : byte;
 begin
   brightValue := tbBrightness.poSiTioN;
 
-  for y := 0 to Image1.Height-1 do
-    for x := 0 to IMage1.Width - 1 do begin
-      grayResult := grayValue[x,y] + brightValue;
-      if grayResult > 255 then grayResult := 255;
-      if grayResult < 0 then grayResult := 0;
-      grayValue[x, y] := grayResult;
-      image1.canvas.pixels[x, y] := RGB(grayResult, grayResult, grayResult);
+  for y := 0 to tinggi - 1 do
+    for x := 0 to lebar - 1 do begin
+      resultR := clampByte(bitmapR[x, y] + brightValue);
+      resultG := clampByte(bitmapG[x, y] + brightValue);
+      resultB := clampByte(bitmapB[x, y] + brightValue);
+      bitmapR[x, y] := resultR;
+      bitmapG[x, y] := resultG;
+      bitmapB[x, y] := resultB;
+      image1.canvas.pixels[x, y] := RGB(resultR, resultG, resultB);
     end;
 
 end;
@@ -91,20 +95,38 @@ var
   y, x: integer;
   contrastG: integer;
   contrastP: integer;
-  grayResult: integer
+  resultR, resultG, resultB: byte
 ;begin
   contrastG := tbContrastG.position;
   contrastP := tbcontrastp.position;
 
-  for y := 0 to image1.height - 1 do
-    for x := 0 to image1.width - 1 do begin
-      grayResult := contrastG * (grayValue[x, y] - contrastP) + contrastP;
-      if grayResult > 255 then grayResult := 255;
-      if grayResult < 0 then grayResult := 0;
-      grayValue[x, y] := grayResult;
-      image1.canvas.pixels[x, y] := RGB(grayResult, grayResult, grayResult);
+  for y := 0 to tinggi - 1 do
+    for x := 0 to lebar - 1 do begin
+      resultR := contrastValue(bitmapR[x, y], contrastG, contrastP);
+      resultG := contrastValue(bitmapG[x, y], contrastG, contrastP);
+      resultB := contrastValue(bitmapB[x, y], contrastG, contrastP);
+      bitmapR[x, y] := resultR;
+      bitmapB[x, y] := resultB;
+      bitmapG[x, y] := resultG;
+
+      image1.canvas.pixels[x, y] := RGB(resultR, resultG, resultB);
     end;
 
+end;
+
+procedure TForm1.btnGrayscaleClick(Sender: TObject);
+var
+  y, x : integer ;
+  grayValue : byte;
+begin
+  for y := 0 to tinggi - 1 do
+    for x := 0 to lebar -  1 do begin
+      grayValue := (bitmapR[x, y] + bitmapG[x, y] + bitmapB[x, y]) div 3;
+      bitmapR[x, y] := grayValue;
+      bitmapG[x, y] := grayValue;
+      bitmapB[x, y] := grayValue;
+      image1.canvas.pixels[x, y] := RGB(grayValue, grayValue, grayValue);
+    end;
 end;
 
 procedure TForm1.btnSaveClick(Sender: TObject);
@@ -118,14 +140,25 @@ var
   threshold: byte;
 begin
   threshold :=  tbThreshold.Position;
-  for y := 0 to image1.height - 1 do
-    for x := 0 to image1.width - 1 do
+  for y := 0 to tinggi - 1 do
+    for x := 0 to lebar - 1 do
       begin
-        if image1.canvas.pixels[x, y] > threshold then
+        if (image1.canvas.pixels[x, y] and 255) > threshold then
            image1.canvas.pixels[x, y] := RGB(255, 255, 255);
-        if image1.canvas.pixels[x, y] < threshold then
+        if (image1.canvas.pixels[x, y] and 255) < threshold then
            image1.canvas.pixels[x, y] := RGB(0, 0, 0);
       end;
+end;
+
+function tform1.clampByte(v: integer): byte;
+begin
+  if v > 255 then clampByte := 255;
+  if v < 0 then clampByte := 0;
+  clampByte := v;
+end;
+function tform1.contrastValue(v: byte; g, p: integer): byte;
+begin;
+  contrastValue := clampByte(g * (v  - p) + p);
 end;
 
 end.

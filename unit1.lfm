@@ -1,11 +1,11 @@
 object Form1: TForm1
-  Left = 766
-  Height = 372
-  Top = 282
-  Width = 584
+  Left = 775
+  Height = 364
+  Top = 126
+  Width = 571
   Caption = 'Form1'
-  ClientHeight = 372
-  ClientWidth = 584
+  ClientHeight = 364
+  ClientWidth = 571
   LCLVersion = '2.2.2.0'
   object btnOpen: TButton
     Left = 8
@@ -19,7 +19,7 @@ object Form1: TForm1
   object Image1: TImage
     Left = 8
     Height = 240
-    Top = 80
+    Top = 104
     Width = 240
   end
   object btnContrast: TButton
@@ -84,7 +84,7 @@ object Form1: TForm1
   object btnThreshold: TButton
     Left = 264
     Height = 25
-    Top = 144
+    Top = 192
     Width = 75
     Caption = 'Threshold'
     OnClick = btnThresholdClick
@@ -93,12 +93,21 @@ object Form1: TForm1
   object tbThreshold: TTrackBar
     Left = 352
     Height = 47
-    Top = 136
+    Top = 184
     Width = 216
     Max = 255
     Position = 0
     ScalePos = trRight
     TabOrder = 8
+  end
+  object btnGrayscale: TButton
+    Left = 264
+    Height = 25
+    Top = 144
+    Width = 75
+    Caption = 'Grayscale'
+    OnClick = btnGrayscaleClick
+    TabOrder = 9
   end
   object op: TOpenPictureDialog
     Left = 104
