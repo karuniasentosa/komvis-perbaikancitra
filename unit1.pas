@@ -20,6 +20,7 @@ type
     btnSave: TButton;
     btnGrayscale: TButton;
     btnSmoothing: TButton;
+    Button1: TButton;
     Image1: TImage;
     op: TOpenPictureDialog;
     sp: TSavePictureDialog;
@@ -34,6 +35,7 @@ type
     procedure btnSaveClick(Sender: TObject);
     procedure btnSmoothingClick(Sender: TObject);
     procedure btnThresholdClick(Sender: TObject);
+    procedure btnSharpeningClick(Sender: TObject);
     function clampByte(v: integer): byte;
     function contrastValue(v: byte; g, p: integer): byte;
   private
@@ -175,6 +177,39 @@ begin
         if (image1.canvas.pixels[x, y] and 255) < threshold then
            image1.canvas.pixels[x, y] := RGB(0, 0, 0);
       end;
+end;
+
+procedure TForm1.btnSharpeningClick(Sender: TObject);
+var
+  x, y: integer;
+  r1, r2, r3: integer;
+  g1, g2, g3: integer;
+  b1, b2, b3: integer;
+begin
+  for y:= 0 to image1.Height - 1 do
+    for x:= 0 to image1.Width - 1 do begin
+      r1:= bitmapR[x, y];
+      g1:= bitmapG[x, y];
+      b1:= bitmapB[x, y];
+
+      r2 := bitmapR[x + 1, y + 1];
+      g2 := bitmapG[x + 1, y + 1];
+      b2 := bitmapB[x + 1, y + 1];
+
+      r3:= r1 + (r1 - r2) div 2;
+      g3:= g1 + (g1 - g2) div 2;
+      b3:= b1 + (b1 - b2) div 2;
+
+      if r3 > 255 then r3 := 255;
+      if g3 > 255 then g3 := 255;
+      if b3 > 255 then b3 := 255;
+
+      if r3 < 0 then r3 := 0;
+      if g3 < 0 then g3 := 0;
+      if b3 < 0 then b3 := 0;
+      image1.Canvas.Pixels[x, y] :=  RGB(r3, g3, b3);
+    end;
+
 end;
 
 function tform1.clampByte(v: integer): byte;
