@@ -78,7 +78,7 @@ var
   brightValue: integer;
   resultR, resultG, resultB : byte;
 begin
-  brightValue := tbBrightness.poSiTioN;
+  brightValue := tbBrightness.position;
 
   for y := 0 to tinggi - 1 do
     for x := 0 to lebar - 1 do begin
@@ -168,7 +168,7 @@ var
   y, x : integer;
   threshold: byte;
 begin
-  threshold :=  tbThreshold.Position;
+  threshold :=  -tbThreshold.Position;
   for y := 0 to tinggi - 1 do
     for x := 0 to lebar - 1 do
       begin

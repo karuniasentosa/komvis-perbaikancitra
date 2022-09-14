@@ -4,13 +4,13 @@ object Form1: TForm1
   Top = 107
   Width = 571
   Caption = 'Form1'
-  ClientHeight = 428
-  ClientWidth = 571
+  ClientHeight = 0
+  ClientWidth = 0
   LCLVersion = '2.2.2.0'
   object btnOpen: TButton
     Left = 8
     Height = 25
-    Top = 8
+    Top = 16
     Width = 75
     Caption = 'Open'
     OnClick = btnOpenClick
@@ -25,7 +25,7 @@ object Form1: TForm1
   object btnContrast: TButton
     Left = 264
     Height = 25
-    Top = 80
+    Top = 120
     Width = 75
     Caption = 'Contrast'
     OnClick = btnContrastClick
@@ -34,7 +34,7 @@ object Form1: TForm1
   object btnBrightness: TButton
     Left = 264
     Height = 25
-    Top = 16
+    Top = 64
     Width = 75
     Caption = 'Brightness'
     OnClick = btnBrightnessClick
@@ -43,7 +43,7 @@ object Form1: TForm1
   object tbBrightness: TTrackBar
     Left = 352
     Height = 47
-    Top = 8
+    Top = 64
     Width = 216
     Max = 255
     Min = -255
@@ -54,7 +54,7 @@ object Form1: TForm1
   object tbContrastG: TTrackBar
     Left = 352
     Height = 47
-    Top = 48
+    Top = 104
     Width = 200
     Max = 5
     Min = 1
@@ -65,7 +65,7 @@ object Form1: TForm1
   object tbContrastP: TTrackBar
     Left = 352
     Height = 47
-    Top = 88
+    Top = 144
     Width = 216
     Max = 255
     Position = 0
@@ -73,10 +73,10 @@ object Form1: TForm1
     TabOrder = 5
   end
   object btnSave: TButton
-    Left = 8
+    Left = 296
     Height = 25
-    Top = 40
-    Width = 75
+    Top = 384
+    Width = 240
     Caption = 'Save'
     OnClick = btnSaveClick
     TabOrder = 6
@@ -93,7 +93,7 @@ object Form1: TForm1
   object tbThreshold: TTrackBar
     Left = 352
     Height = 47
-    Top = 184
+    Top = 192
     Width = 216
     Max = 255
     Position = 0
@@ -103,7 +103,7 @@ object Form1: TForm1
   object btnGrayscale: TButton
     Left = 264
     Height = 25
-    Top = 144
+    Top = 16
     Width = 75
     Caption = 'Grayscale'
     OnClick = btnGrayscaleClick
@@ -112,16 +112,16 @@ object Form1: TForm1
   object btnSmoothing: TButton
     Left = 264
     Height = 25
-    Top = 237
+    Top = 248
     Width = 75
     Caption = 'Smoothing'
     OnClick = btnSmoothingClick
     TabOrder = 10
   end
   object Button1: TButton
-    Left = 264
+    Left = 352
     Height = 25
-    Top = 282
+    Top = 248
     Width = 75
     Caption = 'Sharpening'
     OnClick = btnSharpeningClick
