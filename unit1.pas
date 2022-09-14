@@ -19,6 +19,7 @@ type
     btnBrightness: TButton;
     btnSave: TButton;
     btnGrayscale: TButton;
+    btnSmoothing: TButton;
     Image1: TImage;
     op: TOpenPictureDialog;
     sp: TSavePictureDialog;
@@ -31,6 +32,7 @@ type
     procedure btnGrayscaleClick(Sender: TObject);
     procedure btnOpenClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure btnSmoothingClick(Sender: TObject);
     procedure btnThresholdClick(Sender: TObject);
     function clampByte(v: integer): byte;
     function contrastValue(v: byte; g, p: integer): byte;
@@ -132,6 +134,28 @@ end;
 procedure TForm1.btnSaveClick(Sender: TObject);
 begin
   if sp.Execute then image1.Picture.savetofile(sp.filename);
+end;
+
+procedure TForm1.btnSmoothingClick(Sender: TObject);
+var
+   x, y: integer;
+   R, G, B: integer;
+begin
+  for y:= 0 to image1.Height -1 do
+    for x:= 0 to image1.Width -1 do begin
+      R := (bitmapR[x, y] + bitmapR[x - 1, y - 1] + bitmapR[x, y-1]+
+        bitmapR[x + 1, y - 1] + bitmapR[x - 1, y] + bitmapR[x + 1, y]+
+        bitmapR[x - 1, y + 1] + bitmapR[x, y + 1] + bitmapR[x + 1, y + 1]) div 9;
+
+      G := (bitmapG[x, y] + bitmapG[x - 1, y - 1] + bitmapG[x, y-1]+
+        bitmapG[x + 1, y - 1] + bitmapG[x - 1, y] + bitmapG[x + 1, y]+
+        bitmapG[x - 1, y + 1] + bitmapG[x, y + 1] + bitmapG[x + 1, y + 1]) div 9;
+
+      B := (bitmapB[x, y] + bitmapB[x - 1, y - 1] + bitmapB[x, y-1]+
+        bitmapB[x + 1, y - 1] + bitmapB[x - 1, y] + bitmapB[x + 1, y]+
+        bitmapB[x - 1, y + 1] + bitmapB[x, y + 1] + bitmapB[x + 1, y + 1]) div 9;
+      image1.Canvas.Pixels[x, y] := RGB(R, G, B);
+    end;
 end;
 
 procedure TForm1.btnThresholdClick(Sender: TObject);
