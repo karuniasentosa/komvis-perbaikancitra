@@ -154,6 +154,9 @@ begin
       B := (bitmapB[x, y] + bitmapB[x - 1, y - 1] + bitmapB[x, y-1]+
         bitmapB[x + 1, y - 1] + bitmapB[x - 1, y] + bitmapB[x + 1, y]+
         bitmapB[x - 1, y + 1] + bitmapB[x, y + 1] + bitmapB[x + 1, y + 1]) div 9;
+      bitmapR[x, y] := R;
+      bitmapG[x, y] := G;
+      bitmapB[x, y] := B;
       image1.Canvas.Pixels[x, y] := RGB(R, G, B);
     end;
 end;
