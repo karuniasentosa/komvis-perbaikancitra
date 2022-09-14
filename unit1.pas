@@ -58,7 +58,6 @@ implementation
 procedure TForm1.btnOpenClick(Sender: TObject);
 var
   y, x: integer;
-  r, g, b, avg: byte;
 begin
   if op.Execute then begin
     Image1.Picture.LoadFromFile(op.FileName);
@@ -109,6 +108,7 @@ var
       resultR := contrastValue(bitmapR[x, y], contrastG, contrastP);
       resultG := contrastValue(bitmapG[x, y], contrastG, contrastP);
       resultB := contrastValue(bitmapB[x, y], contrastG, contrastP);
+
       bitmapR[x, y] := resultR;
       bitmapB[x, y] := resultB;
       bitmapG[x, y] := resultG;
@@ -173,8 +173,8 @@ begin
     for x := 0 to lebar - 1 do
       begin
         if (image1.canvas.pixels[x, y] and 255) > threshold then
-           image1.canvas.pixels[x, y] := RGB(255, 255, 255);
-        if (image1.canvas.pixels[x, y] and 255) < threshold then
+           image1.canvas.pixels[x, y] := RGB(255, 255, 255)
+        else
            image1.canvas.pixels[x, y] := RGB(0, 0, 0);
       end;
 end;
@@ -200,13 +200,12 @@ begin
       g3:= g1 + (g1 - g2) div 2;
       b3:= b1 + (b1 - b2) div 2;
 
-      if r3 > 255 then r3 := 255;
-      if g3 > 255 then g3 := 255;
-      if b3 > 255 then b3 := 255;
-
-      if r3 < 0 then r3 := 0;
-      if g3 < 0 then g3 := 0;
-      if b3 < 0 then b3 := 0;
+      r3 := clampByte(r3);
+      g3 := clampByte(g3);
+      b3 := clampByte(b3);
+      bitmapR[x, y] := r3;
+      bitmapG[x, y] := g3;
+      bitmapB[x, y] := b3;
       image1.Canvas.Pixels[x, y] :=  RGB(r3, g3, b3);
     end;
 
